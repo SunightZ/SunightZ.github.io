@@ -1,0 +1,129 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import Icon from '../../components/Icon.astro';
+import {
+  byDateDesc,
+  formatDate,
+  formatDateCN,
+  postUrl,
+  published,
+  readingTime,
+  siblings,
+  tagSlug,
+} from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = published(await getCollection('blog'));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+
+const { post, posts } = Astro.props;
+const { Content, headings } = await render(post);
+const { title, description, pubDate, updatedDate, tags, category } = post.data;
+const minutes = readingTime(post.body);
+const { prev, next } = siblings(posts, post);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={pubDate.toISOString()}
+  tags={tags}
+>
+  <div class="container">
+    <article>
+      <header class="post-header">
+        <h1 class="post-header__title">{title}</h1>
+
+        <div class="post-header__meta">
+          <span class="post-card__cat">{category}</span>
+          <span class="dot-sep">·</span>
+          <time datetime={pubDate.toISOString()}>{formatDateCN(pubDate)}</time>
+          <span class="dot-sep">·</span>
+          <span>{minutes} 分钟阅读</span>
+          {
+            updatedDate && (
+              <>
+                <span class="dot-sep">·</span>
+                <span>更新于 {formatDate(updatedDate)}</span>
+              </>
+            )
+          }
+        </div>
+
+        {description && <p class="post-header__desc">{description}</p>}
+
+        {
+          tags.length > 0 && (
+            <div class="post-card__foot" style="margin-top:16px">
+              {tags.map((tag) => (
+                <a class="tag" href={`/tags/${tagSlug(tag)}/`}>
+                  <Icon name="hash" size={11} />
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <div class="post-layout">
+        <div class="prose" data-article>
+          <Content />
+        </div>
+
+        <aside>
+          <TableOfContents headings={headings} />
+        </aside>
+      </div>
+
+      <nav class="post-nav" aria-label="上下篇导航">
+        {
+          prev ? (
+            <a class="post-nav__item" href={postUrl(prev)}>
+              <span class="post-nav__label">← 上一篇</span>
+              <span class="post-nav__title">{prev.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next ? (
+            <a class="post-nav__item post-nav__item--next" href={postUrl(next)}>
+              <span class="post-nav__label">下一篇 →</span>
+              <span class="post-nav__title">{next.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  // 给正文标题补一个可点击的锚点（纯前端，无需额外插件）
+  const article = document.querySelector('[data-article]');
+  if (article) {
+    article.querySelectorAll<HTMLElement>('h2[id], h3[id], h4[id]').forEach((h) => {
+      const a = document.createElement('a');
+      a.className = 'heading-anchor';
+      a.href = `#${h.id}`;
+      a.textContent = '#';
+      a.setAttribute('aria-label', `跳转到「${h.textContent ?? ''}」`);
+      h.appendChild(a);
+    });
+
+    // 外部链接补 rel / target
+    article.querySelectorAll<HTMLAnchorElement>('a[href^="http"]').forEach((a) => {
+      if (a.hostname === window.location.hostname) return;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+  }
+</script>

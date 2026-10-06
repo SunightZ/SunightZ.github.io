@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate, groupByYear, postUrl, published, tagSlug } from '../utils';
+import Icon from '../components/Icon.astro';
+
+const posts = published(await getCollection('blog'));
+const years = groupByYear(posts);
+const total = posts.length;
+---
+
+<BaseLayout title="归档" description="按年份浏览全部文章">
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-header__title">归档</h1>
+      <p class="page-header__desc">
+        共 {total} 篇文章，跨越 {years.length} 个年份。
+      </p>
+    </header>
+
+    {
+      years.length === 0 && (
+        <div class="empty">
+          <p>还没有文章。</p>
+        </div>
+      )
+    }
+
+    {
+      years.map(({ year, posts: list }) => (
+        <section>
+          <div class="archive-year">
+            <span class="archive-year__label">{year}</span>
+            <span class="archive-year__count">{list.length} 篇</span>
+            <span class="archive-year__line" />
+          </div>
+
+          <ul class="archive-list">
+            {list.map((post) => (
+              <li class="archive-item">
+                <time class="archive-item__date" datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+                <a class="archive-item__title" href={postUrl(post)}>
+                  {post.data.title}
+                </a>
+                <span class="archive-item__tags">
+                  {post.data.tags.slice(0, 3).map((tag) => (
+                    <a class="tag" href={`/tags/${tagSlug(tag)}/`}>
+                      <Icon name="hash" size={11} />
+                      {tag}
+                    </a>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

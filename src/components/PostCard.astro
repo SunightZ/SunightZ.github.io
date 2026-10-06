@@ -1,0 +1,40 @@
+---
+import type { Post } from '../utils';
+import { formatDate, postUrl, readingTime, tagSlug } from '../utils';
+import Icon from './Icon.astro';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags, category, pin } = post.data;
+const minutes = readingTime(post.body);
+---
+
+<li class="post-card">
+  <div class="post-card__top">
+    <span class="post-card__cat">{category}</span>
+    {pin && <span class="pin-badge">置顶</span>}
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+    <span class="dot-sep">·</span>
+    <span class="post-card__read">{minutes} 分钟</span>
+  </div>
+
+  <h3 class="post-card__title">
+    <a href={postUrl(post)}>{title}</a>
+  </h3>
+
+  <p class="post-card__desc">{description}</p>
+
+  <div class="post-card__foot">
+    {
+      tags.slice(0, 4).map((tag) => (
+        <a class="tag" href={`/tags/${tagSlug(tag)}/`}>
+          <Icon name="hash" size={11} />
+          {tag}
+        </a>
+      ))
+    }
+  </div>
+</li>

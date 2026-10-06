@@ -1,0 +1,239 @@
+---
+/**
+ * 全站搜索：构建期生成 /search.json 索引，运行时纯前端过滤，
+ * 不引入任何搜索库，也不需要后端。
+ */
+import Icon from './Icon.astro';
+---
+
+<div class="search-overlay" data-search-overlay aria-hidden="true">
+  <div
+    class="search-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="搜索文章"
+    data-search-panel
+  >
+    <div class="search-panel__head">
+      <Icon name="search" />
+      <input
+        class="search-input"
+        type="search"
+        placeholder="搜索标题、标签或正文…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="搜索关键词"
+        data-search-input
+      />
+      <button class="icon-btn" type="button" aria-label="关闭搜索" data-search-close>
+        <Icon name="close" size={16} />
+      </button>
+    </div>
+
+    <ul class="search-results" data-search-results></ul>
+
+    <div class="search-panel__foot">
+      <span><kbd>↑</kbd> <kbd>↓</kbd> 选择</span>
+      <span><kbd>Enter</kbd> 打开</span>
+      <span><kbd>Esc</kbd> 关闭</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface Doc {
+    title: string;
+    description: string;
+    tags: string[];
+    url: string;
+    date: string;
+    category: string;
+    body: string;
+  }
+
+  const overlay = document.querySelector<HTMLElement>('[data-search-overlay]');
+  const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+  const list = document.querySelector<HTMLUListElement>('[data-search-results]');
+  const panel = document.querySelector<HTMLElement>('[data-search-panel]');
+
+  if (overlay && input && list && panel) {
+    let docs: Doc[] | null = null;
+    let loading: Promise<Doc[]> | null = null;
+    let items: Doc[] = [];
+    let active = -1;
+
+    const escapeHtml = (s: string) =>
+      s.replace(/[&<>"']/g, (c) =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string
+      );
+
+    /** 把命中的关键词包成 <mark>（先转义再替换，避免 XSS） */
+    const highlight = (text: string, query: string) => {
+      const safe = escapeHtml(text);
+      if (!query) return safe;
+      const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return safe.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+    };
+
+    const load = async (): Promise<Doc[]> => {
+      if (docs) return docs;
+      if (!loading) {
+        loading = fetch('/search.json')
+          .then((r) => (r.ok ? r.json() : []))
+          .then((data: Doc[]) => (docs = data))
+          .catch(() => (docs = []));
+      }
+      return loading;
+    };
+
+    const score = (doc: Doc, q: string): number => {
+      const title = doc.title.toLowerCase();
+      const desc = doc.description.toLowerCase();
+      const tags = doc.tags.join(' ').toLowerCase();
+      const body = doc.body.toLowerCase();
+      let s = 0;
+      if (title.includes(q)) s += 100 - Math.min(title.indexOf(q), 50);
+      if (title.startsWith(q)) s += 40;
+      if (tags.includes(q)) s += 45;
+      if (desc.includes(q)) s += 25;
+      if (doc.category.toLowerCase().includes(q)) s += 15;
+      let from = 0;
+      let hits = 0;
+      while (hits < 8) {
+        const at = body.indexOf(q, from);
+        if (at === -1) break;
+        hits += 1;
+        from = at + q.length;
+      }
+      s += hits * 4;
+      return s;
+    };
+
+    const snippet = (doc: Doc, q: string): string => {
+      const at = doc.body.toLowerCase().indexOf(q);
+      if (at === -1) return doc.description;
+      const start = Math.max(0, at - 40);
+      const end = Math.min(doc.body.length, at + q.length + 70);
+      return (start > 0 ? '…' : '') + doc.body.slice(start, end) + (end < doc.body.length ? '…' : '');
+    };
+
+    const render = (query: string) => {
+      const q = query.trim().toLowerCase();
+      list.innerHTML = '';
+
+      if (!q) {
+        items = [];
+        list.innerHTML =
+          '<li class="search-empty">输入关键词开始搜索，支持标题、标签与正文内容</li>';
+        return;
+      }
+
+      const all = docs ?? [];
+      items = all
+        .map((doc) => ({ doc, s: score(doc, q) }))
+        .filter((x) => x.s > 0)
+        .sort((a, b) => b.s - a.s)
+        .slice(0, 20)
+        .map((x) => x.doc);
+
+      active = items.length > 0 ? 0 : -1;
+
+      if (items.length === 0) {
+        list.innerHTML = `<li class="search-empty">没有找到与「${escapeHtml(query)}」相关的文章</li>`;
+        return;
+      }
+
+      for (const [i, doc] of items.entries()) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.className = 'search-result' + (i === 0 ? ' is-active' : '');
+        a.href = doc.url;
+        a.innerHTML =
+          `<div class="search-result__title">${highlight(doc.title, query.trim())}` +
+          `<span class="tag">${escapeHtml(doc.category)}</span></div>` +
+          `<div class="search-result__desc">${highlight(snippet(doc, q), query.trim())}</div>`;
+        li.appendChild(a);
+        list.appendChild(li);
+      }
+    };
+
+    const setActive = (index: number) => {
+      const nodes = list.querySelectorAll<HTMLAnchorElement>('.search-result');
+      if (nodes.length === 0) return;
+      active = (index + nodes.length) % nodes.length;
+      nodes.forEach((n, i) => n.classList.toggle('is-active', i === active));
+      nodes[active]?.scrollIntoView({ block: 'nearest' });
+    };
+
+    const open = async () => {
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      await load();
+      input.focus();
+      input.select();
+      if (!list.children.length) render(input.value);
+    };
+
+    const close = () => {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    document.querySelectorAll('[data-search-open]').forEach((btn) =>
+      btn.addEventListener('click', () => void open())
+    );
+    document.querySelector('[data-search-close]')?.addEventListener('click', close);
+
+    overlay.addEventListener('click', (event) => {
+      if (!panel.contains(event.target as Node)) close();
+    });
+
+    let timer: number | undefined;
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      const value = input.value;
+      timer = window.setTimeout(() => render(value), 90);
+    });
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActive(active + 1);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setActive(active - 1);
+      } else if (event.key === 'Enter') {
+        const target = items[active];
+        if (target) window.location.href = target.url;
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const isOpen = overlay.classList.contains('is-open');
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        isOpen ? close() : void open();
+        return;
+      }
+
+      if (event.key === 'Escape' && isOpen) {
+        close();
+        return;
+      }
+
+      // 在非输入状态下按 / 直接唤起搜索
+      if (
+        !isOpen &&
+        event.key === '/' &&
+        !(event.target instanceof HTMLInputElement) &&
+        !(event.target instanceof HTMLTextAreaElement)
+      ) {
+        event.preventDefault();
+        void open();
+      }
+    });
+  }
+</script>

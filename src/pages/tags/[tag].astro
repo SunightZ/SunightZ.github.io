@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { published, sortPosts, tagCounts, tagSlug } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = published(await getCollection('blog'));
+  const tags = tagCounts(posts);
+
+  return tags.map(({ tag, count }) => ({
+    params: { tag: tagSlug(tag) },
+    props: {
+      tag,
+      count,
+      posts: sortPosts(posts.filter((p) => p.data.tags.includes(tag))),
+    },
+  }));
+}
+
+const { tag, count, posts } = Astro.props;
+---
+
+<BaseLayout title={`标签：${tag}`} description={`标签「${tag}」下的全部文章，共 ${count} 篇`}>
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-header__title">
+        标签：<span style="background:var(--gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">{tag}</span>
+      </h1>
+      <p class="page-header__desc">
+        共 {count} 篇 · <a href="/tags">查看全部标签</a>
+      </p>
+    </header>
+
+    <ul class="post-list">
+      {posts.map((post) => <PostCard post={post} />)}
+    </ul>
+  </div>
+</BaseLayout>

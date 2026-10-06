@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, SKILLS, SOCIALS } from '../consts';
+import { published, sortPosts, tagCounts, tagSlug } from '../utils';
+
+const all = sortPosts(published(await getCollection('blog')));
+const pinned = all.filter((p) => p.data.pin);
+const recent = all.filter((p) => !p.data.pin).slice(0, SITE.postsPerPage);
+const tags = tagCounts(all).slice(0, 16);
+const total = all.length;
+---
+
+<BaseLayout>
+  <div class="container">
+    <section class="hero">
+      <div class="hero__inner">
+        <span class="hero__badge">
+          <span class="hero__dot"></span>
+          已上线 · 共 {total} 篇笔记 · 由 Astro 静态生成
+        </span>
+
+        <h1 class="hero__title">
+          向下扎根，<em>向系统深处折腾</em>
+        </h1>
+
+        <p class="hero__desc">{SITE.description}</p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/archive">
+            <Icon name="book" />
+            浏览全部文章
+          </a>
+          <a class="btn" href="/about">
+            <Icon name="user" />
+            关于我
+          </a>
+          <a class="btn" href="/rss.xml">
+            <Icon name="rss" />
+            订阅 RSS
+          </a>
+        </div>
+
+        <ul class="skills">
+          {SKILLS.map((skill) => <li>{skill}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    {
+      pinned.length > 0 && (
+        <section class="section">
+          <div class="section__head">
+            <h2 class="section__title">置顶</h2>
+          </div>
+          <ul class="post-list">
+            {pinned.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="section">
+      <div class="section__head">
+        <h2 class="section__title">最新文章</h2>
+        <a class="section__more" href="/archive">全部 {total} 篇 →</a>
+      </div>
+
+      {
+        recent.length > 0 ? (
+          <ul class="post-list">
+            {recent.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </ul>
+        ) : (
+          <div class="empty">
+            <p>还没有文章，去 src/content/blog/ 下新建一个 .md 文件就能发第一篇。</p>
+          </div>
+        )
+      }
+    </section>
+
+    {
+      tags.length > 0 && (
+        <section class="section">
+          <div class="section__head">
+            <h2 class="section__title">标签</h2>
+            <a class="section__more" href="/tags">全部标签 →</a>
+          </div>
+          <ul class="tag-cloud">
+            {tags.map(({ tag, count }) => (
+              <li>
+                <a class="tag-cloud__item" href={`/tags/${tagSlug(tag)}/`}>
+                  {tag}
+                  <span class="tag-cloud__count">{count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

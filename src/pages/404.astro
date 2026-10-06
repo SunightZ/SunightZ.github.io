@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="页面不存在" description="404 — 找不到这个页面" noindex>
+  <div class="container container--narrow">
+    <div class="error-page">
+      <div class="error-page__code">404</div>
+      <h1 class="error-page__title">这个页面不在地图上</h1>
+      <p class="error-page__desc">
+        链接可能已经失效，或者文章被改名了。试试从首页或归档重新找找。
+      </p>
+
+      <div class="hero__actions" style="justify-content:center">
+        <a class="btn btn--primary" href="/">
+          <Icon name="home" />
+          回到首页
+        </a>
+        <a class="btn" href="/archive">
+          <Icon name="archive" />
+          浏览归档
+        </a>
+        <button class="btn" type="button" data-search-open>
+          <Icon name="search" />
+          搜索文章
+        </button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

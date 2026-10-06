@@ -1,0 +1,95 @@
+---
+import { NAV, SITE } from '../consts';
+import Icon from './Icon.astro';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label={`${SITE.title} 首页`}>
+      <span class="brand__mark" aria-hidden="true">S</span>
+      <span>{SITE.title}</span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="主导航">
+      {
+        NAV.map((item) => (
+          <a
+            class="nav__link"
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__actions">
+      <button class="icon-btn search-trigger" type="button" data-search-open aria-label="搜索文章">
+        <Icon name="search" />
+        <span>搜索</span>
+        <kbd>Ctrl K</kbd>
+      </button>
+
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="切换明暗主题">
+        <Icon name="sun" class="icon-sun" />
+        <Icon name="moon" class="icon-moon" />
+      </button>
+
+      <button
+        class="icon-btn menu-btn"
+        type="button"
+        data-menu-toggle
+        aria-label="打开导航菜单"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const nav = document.getElementById('site-nav');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+
+  // 明暗主题切换
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    const dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {
+      /* 隐私模式下忽略 */
+    }
+  });
+
+  // 移动端导航
+  const closeNav = () => {
+    nav?.classList.remove('is-open');
+    menuBtn?.setAttribute('aria-expanded', 'false');
+  };
+
+  menuBtn?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('is-open') ?? false;
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  // 点击导航项后收起
+  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeNav));
+
+  // 点击空白处收起
+  document.addEventListener('click', (event) => {
+    if (!nav?.classList.contains('is-open')) return;
+    const target = event.target as Node;
+    if (!nav.contains(target) && !menuBtn?.contains(target)) closeNav();
+  });
+
+  // 路由切换（视口过渡）时收起
+  document.addEventListener('astro:after-swap', closeNav);
+</script>

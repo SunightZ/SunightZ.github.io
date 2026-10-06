@@ -1,0 +1,14 @@
+# pnpm 11+ 的配置入口。
+# 从 pnpm 11 起 .npmrc 只读取 registry / 鉴权配置，
+# 其余设置（node-linker、store-dir、allowBuilds 等）必须写在这里。
+#
+# nodeLinker: hoisted —— 生成扁平的真实目录结构（不使用符号链接），
+# 兼容性最好，CI 与本地表现一致。
+nodeLinker: hoisted
+
+# 显式批准需要执行安装脚本的包，否则 pnpm 会以
+# ERR_PNPM_IGNORED_BUILDS 退出（esbuild 等原生依赖需要跑安装脚本）。
+allowBuilds:
+  esbuild: true
+  sharp: true
+  '@astrojs/compiler-rs': true

@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="progress-bar" data-progress-bar aria-hidden="true"></div>
+
+<button class="to-top" type="button" data-to-top aria-label="回到顶部">
+  <Icon name="arrow-up" />
+</button>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-progress-bar]');
+  const btn = document.querySelector<HTMLButtonElement>('[data-to-top]');
+
+  const update = () => {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    const ratio = max > 0 ? Math.min(1, doc.scrollTop / max) : 0;
+    if (bar) bar.style.width = `${ratio * 100}%`;
+    btn?.classList.toggle('is-visible', doc.scrollTop > 420);
+  };
+
+  update();
+  document.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+
+  btn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

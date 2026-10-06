@@ -1,0 +1,27 @@
+{
+  "name": "sunight-blog",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sunight 的个人技术博客 — Android 系统开发 / 内核 / 逆向 / C++",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@astrojs/compiler-rs",
+      "@bruits/satteri-win32-x64-msvc",
+      "sharp"
+    ]
+  }
+}

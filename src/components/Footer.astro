@@ -1,0 +1,28 @@
+---
+import { SITE, SOCIALS } from '../consts';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div>
+      © {year} {SITE.author} · 用 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a
+      > 构建 · 托管于 GitHub Pages
+    </div>
+
+    <nav class="site-footer__links" aria-label="页脚导航">
+      <a href="/rss.xml"><Icon name="rss" /> RSS</a>
+      <a href="/sitemap-index.xml">站点地图</a>
+      {
+        SOCIALS.filter((s) => s.icon === 'github').map((s) => (
+          <a href={s.href} target="_blank" rel="noopener">
+            <Icon name={s.icon} /> {s.label}
+          </a>
+        ))
+      }
+      <a href="#main">回到顶部</a>
+    </nav>
+  </div>
+</footer>

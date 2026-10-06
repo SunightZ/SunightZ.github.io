@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, SOCIALS } from '../consts';
+
+const focus = [
+  {
+    icon: 'cpu',
+    title: 'Android 系统与 Framework',
+    desc: 'Binder / AMS / PMS 的调用链、系统服务裁剪、SurfaceFlinger 与显示管线。',
+  },
+  {
+    icon: 'terminal',
+    title: 'Shizuku 与 adb 权限',
+    desc: '用 shell 身份直通系统 API，绕开普通应用权限模型，同时不破坏系统的安全边界。',
+  },
+  {
+    icon: 'layers',
+    title: '内核与 GKI 编译',
+    desc: '高通平台内核配置、KMI 兼容、AnyKernel3 打包与可刷入镜像的产出流程。',
+  },
+  {
+    icon: 'zap',
+    title: '触摸注入与自动化',
+    desc: '基于无障碍与 InputManager 的多指手势模拟，链式调用与握持稳定性。',
+  },
+  {
+    icon: 'code',
+    title: 'C / C++ 与逆向',
+    desc: 'Native 层调试、ELF 分析、Hook 与内存读写，以及跨平台图形界面的落地。',
+  },
+  {
+    icon: 'book',
+    title: '工程化与踩坑记录',
+    desc: '把一次性的“能跑”整理成可复现的流程与脚本，留给下一次的自己。',
+  },
+];
+
+const links = SOCIALS.filter((s) => s.icon !== 'rss');
+---
+
+<BaseLayout title="关于" description={`关于 ${SITE.author}（${SITE.nickname}）与这个博客`}>
+  <div class="container container--narrow">
+    <header class="page-header">
+      <h1 class="page-header__title">关于</h1>
+      <p class="page-header__desc">一个把 Android 拆开看的角落。</p>
+    </header>
+
+    <div class="about-hero">
+      <div class="about-avatar" aria-hidden="true">S</div>
+      <div>
+        <h2 class="about-hero__name">{SITE.nickname} · {SITE.author}</h2>
+        <p class="about-hero__bio">{SITE.tagline}</p>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card__label">坐标</div>
+        <div class="info-card__value">QUNU</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card__label">主要方向</div>
+        <div class="info-card__value">Android 系统 / 内核 / 逆向</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card__label">常用语言</div>
+        <div class="info-card__value">C · C++ · Java · Kotlin · Shell</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card__label">本站技术栈</div>
+        <div class="info-card__value">Astro + Markdown + GitHub Pages</div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <h2>我在折腾什么</h2>
+      <p>
+        大部分时间花在 Android 的“缝隙”里：那些官方没有开放、但系统本身完全支持的能力。
+        比如用 <code>Shizuku</code> 以 shell 身份调用系统 API，比如把无障碍服务当成一个可控的输入源，
+        比如为了改一个内核参数而完整走一遍 GKI 编译流程。
+      </p>
+      <p>
+        这类事情通常没有现成的答案，只能靠读源码、看日志、反复试。
+        而试出来的结论如果只留在终端历史里，下次遇到同样的问题还要再花一遍时间——
+        所以有了这个博客。
+      </p>
+
+      <h2>关注的方向</h2>
+    </div>
+
+    <div class="info-grid">
+      {
+        focus.map((item) => (
+          <div class="info-card">
+            <div class="info-card__label">
+              <Icon name={item.icon} size={14} />
+              {item.title}
+            </div>
+            <div class="info-card__value" style="font-weight:400;font-size:14.5px;line-height:1.7;color:var(--muted)">
+              {item.desc}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="prose">
+      <h2>关于本站</h2>
+      <p>
+        这是一个纯静态站点，由 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+        在构建期生成 HTML，托管在 GitHub Pages 上。没有数据库、没有后端、没有前端框架运行时，
+        所以加载很快，也很难挂掉。
+      </p>
+      <ul>
+        <li>文章用 Markdown 编写，支持代码高亮、目录、标签与归档；</li>
+        <li>内置全文搜索，索引在构建期生成，运行时纯前端过滤；</li>
+        <li>支持明暗主题、RSS 订阅与移动端自适应。</li>
+      </ul>
+
+      <h2>联系我</h2>
+      <p>如果某篇文章帮你省下了几个小时，或者你发现了文中的错误，欢迎通过下面的方式告诉我。</p>
+    </div>
+
+    <div class="hero__actions" style="margin-top:8px">
+      {
+        links.map((link) => (
+          <a class="btn" href={link.href} target="_blank" rel="noopener">
+            <Icon name={link.icon} />
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
