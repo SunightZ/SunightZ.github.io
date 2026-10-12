@@ -19,5 +19,13 @@
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@astrojs/compiler-rs",
+      "@bruits/satteri-win32-x64-msvc",
+      "sharp"
+    ]
   }
 }
