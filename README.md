@@ -240,3 +240,33 @@ pnpm build:all         # 构建官网 → 同步到 public/screenrecorder/ → A
 **改内容**：官网正文就是 `screenrecorder/` 下的 Markdown，改完重新 `pnpm build:all` 即可。
 **改品牌色**：`screenrecorder/.vitepress/theme/custom.css` 顶部的 `--vp-c-brand-*`。
 **换截图**：替换 `screenrecorder/public/shots/` 里的图片，注意别把私人内容录进截图。
+
+---
+
+## 日常发布流程
+
+博客与官网都是**推送到 `main` 就自动部署**（`.github/workflows/deploy.yml` → GitHub Actions → Pages），
+本地不需要构建，也不需要提交任何产物（`dist/`、`public/screenrecorder/` 都已在 `.gitignore` 里）。
+
+```powershell
+cd D:\AndroidStudioProjects\SunightZ.github.io
+
+git status                      # 先看改了哪些文件
+git add -A                      # 新增的 .md 也要加上，否则推上去站点不会变
+git commit -m "docs: 更新小白录制 常见问题"
+git push
+```
+
+推完等 1～2 分钟，看这两处：
+
+- 站点：<https://sunightz.github.io/>（博客）、<https://sunightz.github.io/screenrecorder/>（官网）
+- 进度：<https://github.com/SunightZ/SunightZ.github.io/actions> 里 `Deploy to GitHub Pages` 转绿即完成
+
+**页面没变化时**：先强刷（`Ctrl + F5`）排除浏览器缓存；再看 Actions 那次运行是否成功、点进去读日志。
+
+**习惯建议**
+
+- 只改 Markdown 时不必本地构建，CI 会构建；想本地先看效果再 `pnpm site:dev` 或 `pnpm build:all`。
+- 提交信息沿用现有风格：`feat:` / `fix:` / `docs:` / `chore:`。
+- 想撤销一次发布：`git revert <commit>` 再 push，Pages 会重新部署回上一次的内容。
+- 出门在外只改几个字：可以直接在 GitHub 网页上编辑文件并提交，同样会触发部署。
