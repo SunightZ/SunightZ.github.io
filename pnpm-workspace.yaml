@@ -8,10 +8,12 @@ nodeLinker: hoisted
 
 # 显式批准需要执行安装脚本的包，否则 pnpm 会以
 # ERR_PNPM_IGNORED_BUILDS 退出（esbuild 等原生依赖需要跑安装脚本）。
+# 这里就是唯一的一份白名单：package.json 里那个旧的 pnpm.onlyBuiltDependencies 已被 pnpm 11 忽略，已删除。
 allowBuilds:
   esbuild: true
   sharp: true
   '@astrojs/compiler-rs': true
+  '@bruits/satteri-win32-x64-msvc': true
 
 # 工作区成员：仓库根是 Astro 博客，「小白录制」官网（VitePress）是同一仓库里的 screenrecorder/。
 # 这样根目录一次 pnpm install 就把两套依赖装好，CI 也只需要一次安装。

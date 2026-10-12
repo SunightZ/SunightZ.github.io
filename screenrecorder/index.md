@@ -6,7 +6,7 @@ hero:
   text: 高帧率屏幕录制与视频处理
   tagline: 系统录屏 / Shizuku / Root 三种采集方式，系统声音与麦克风混音，区域录制、悬浮球、屏幕标注与视频工具箱。没有账号，没有云端，录制内容只留在你自己的设备上。
   image:
-    src: /shots/home.png
+    src: /shots/home.jpg
     alt: 小白录制 主页
   actions:
     - theme: brand
@@ -40,16 +40,20 @@ features:
 
 <div class="sr-shots">
   <figure class="sr-shot">
-    <img src="/shots/home.png" alt="主页：参数预览与录制方式" />
-    <figcaption>主页：参数预览、录制方式、画面设置</figcaption>
+    <img src="/shots/home.jpg" alt="主页：参数预览与录制方式" />
+    <figcaption>主页 · 参数预览、录制方式与画面设置</figcaption>
   </figure>
   <figure class="sr-shot">
-    <img src="/shots/splash.gif" alt="启动动画" />
-    <figcaption>开屏：图标绘制 + 字标（设计稿渲染）</figcaption>
+    <img src="/shots/tool.jpg" alt="工具页：视频工具箱" />
+    <figcaption>工具 · 格式转换、倒放、超分、音量调整…</figcaption>
+  </figure>
+  <figure class="sr-shot">
+    <img src="/shots/album.jpg" alt="相册页：录制列表" />
+    <figcaption>相册 · 列表 / 网格、时长与体积一览</figcaption>
   </figure>
 </div>
 
-<p class="sr-lede">主页把当下会用到的参数一次性摊开：分辨率、帧率、编码格式、码率模式，接着是录制方式与画面设置，最下方是开始录制。截图来自完整版（Shizuku / Root 是完整版功能）。</p>
+<p class="sr-lede">三张都是真机截图，未做任何裁切与缩放。主页把当下会用到的参数一次性摊开，工具页是录制之后的处理入口，相册负责浏览与整理（截图来自完整版，Shizuku / Root 是完整版功能）。</p>
 
 </div>
 
