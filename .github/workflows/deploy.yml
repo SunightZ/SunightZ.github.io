@@ -39,7 +39,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build site
+      # 「小白录制」官网先构建，再同步进 public/screenrecorder/，
+      # 最后由 Astro 构建把它一起复制到 dist/screenrecorder/。
+      - name: Build 小白录制 官网（VitePress）
+        run: pnpm site:build
+        env:
+          ASTRO_TELEMETRY_DISABLED: 1
+
+      - name: Sync 官网 into public/screenrecorder
+        run: pnpm site:sync
+
+      - name: Build blog（Astro）
         run: pnpm build
         env:
           # 关闭遥测，避免 CI 里写入无关的配置目录

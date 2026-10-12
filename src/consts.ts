@@ -24,6 +24,8 @@ export const NAV = [
   { label: '首页', href: '/' },
   { label: '归档', href: '/archive' },
   { label: '标签', href: '/tags' },
+  // 「小白录制」官网：同一仓库的 screenrecorder/（VitePress），构建后挂在 /screenrecorder/ 下
+  { label: '小白录制', href: '/screenrecorder/' },
   { label: '关于', href: '/about' },
 ];
 

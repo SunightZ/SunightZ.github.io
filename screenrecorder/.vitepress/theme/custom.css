@@ -1,0 +1,211 @@
+/**
+ * 小白录制 官网样式。
+ *
+ * 只做三件事：把品牌蓝对齐应用（图标底色 #277AF7）、给首页的卡片/截图/版本标签一套统一外观、
+ * 修正长表格与长截图的窄屏表现。其余交给 VitePress 默认主题，浅色/深色都跟随。
+ */
+
+:root {
+  --vp-c-brand-1: #2f6bff;
+  --vp-c-brand-2: #277af7;
+  --vp-c-brand-3: #1f63d6;
+  --vp-c-brand-soft: rgba(47, 107, 255, 0.14);
+
+  --sr-card-bg: var(--vp-c-bg-soft);
+  --sr-card-border: var(--vp-c-divider);
+  --sr-radius: 16px;
+  --sr-shadow: 0 8px 30px rgba(15, 25, 60, 0.08);
+}
+
+.dark {
+  --sr-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+
+/* 首页 hero：标题用品牌渐变，副标题行高放宽 */
+.VPHero .name,
+.VPHero .text {
+  background: linear-gradient(120deg, #2f6bff, #6ba8ff 55%, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHero .tagline {
+  max-width: 40rem;
+  margin-inline: auto;
+  line-height: 1.75;
+}
+
+.VPHero .VPImage.image-src {
+  border-radius: 22px;
+  box-shadow: var(--sr-shadow);
+}
+
+/* 首页通用区块标题 */
+.sr-section {
+  margin: 4rem auto 0;
+  max-width: 1152px;
+}
+
+.sr-section > h2 {
+  border-top: none !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  font-size: 1.6rem;
+}
+
+.sr-section > p.sr-lede {
+  color: var(--vp-c-text-2);
+  margin-top: -0.4rem;
+}
+
+/* 特性卡片 */
+.sr-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  margin-top: 1.5rem;
+}
+
+.sr-card {
+  border: 1px solid var(--sr-card-border);
+  background: var(--sr-card-bg);
+  border-radius: var(--sr-radius);
+  padding: 18px 18px 16px;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.sr-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--vp-c-brand-2);
+  box-shadow: var(--sr-shadow);
+}
+
+.sr-card h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-top: none;
+  padding-top: 0;
+}
+
+.sr-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--vp-c-text-2);
+}
+
+/* 截图 */
+.sr-shots {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 1.5rem 0 0.5rem;
+  scrollbar-width: thin;
+}
+
+.sr-shot {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sr-shot img {
+  height: 420px;
+  width: auto;
+  border-radius: 20px;
+  border: 1px solid var(--sr-card-border);
+  box-shadow: var(--sr-shadow);
+  background: var(--vp-c-bg);
+}
+
+.sr-shot figcaption {
+  font-size: 0.8rem;
+  color: var(--vp-c-text-3);
+}
+
+/* 版本标签 */
+.sr-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.7;
+  vertical-align: middle;
+}
+
+.sr-tag.full {
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+
+.sr-tag.lite {
+  background: rgba(16, 185, 129, 0.16);
+  color: #0e9f6e;
+}
+
+.dark .sr-tag.lite {
+  color: #34d399;
+}
+
+/* 小圆点列表（功能清单） */
+.sr-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-badges li {
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--sr-card-border);
+  background: var(--vp-c-bg-alt);
+  font-size: 0.82rem;
+  color: var(--vp-c-text-2);
+}
+
+/* 提示块 */
+.sr-note {
+  margin: 1.4rem 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--vp-c-brand-2);
+  border-radius: 0 12px 12px 0;
+  background: var(--vp-c-bg-soft);
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+}
+
+.sr-note strong {
+  color: var(--vp-c-text-1);
+}
+
+/* 版本对比表：窄屏可横向滚动 */
+.sr-scroll {
+  overflow-x: auto;
+  margin: 1.4rem 0;
+}
+
+.sr-scroll table {
+  display: table;
+  width: 100%;
+  min-width: 620px;
+}
+
+/* 截图行在窄屏上不要顶到边 */
+@media (max-width: 640px) {
+  .sr-shot img {
+    height: 340px;
+  }
+
+  .sr-section {
+    margin-top: 3rem;
+  }
+}

@@ -9,6 +9,13 @@ node_modules/
 # astro
 .astro/
 
+# vitepress（小白录制官网：源码在 screenrecorder/，产物同步到 public/screenrecorder/）
+screenrecorder/.vitepress/cache/
+screenrecorder/.vitepress/dist/
+screenrecorder/node_modules/
+# 官网产物由 pnpm build:all / CI 生成，不入库
+public/screenrecorder/
+
 # logs
 npm-debug.log*
 pnpm-debug.log*

@@ -12,3 +12,8 @@ allowBuilds:
   esbuild: true
   sharp: true
   '@astrojs/compiler-rs': true
+
+# 工作区成员：仓库根是 Astro 博客，「小白录制」官网（VitePress）是同一仓库里的 screenrecorder/。
+# 这样根目录一次 pnpm install 就把两套依赖装好，CI 也只需要一次安装。
+packages:
+  - screenrecorder

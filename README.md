@@ -199,3 +199,44 @@ allowBuilds:
 
 **想关掉某个页面**
 删除 `src/pages/` 下对应的文件即可，导航项记得同步移除 `src/consts.ts` 里的对应条目。
+
+---
+
+## 「小白录制」官网（`screenrecorder/`）
+
+同一仓库里还托管着 Android 应用「小白录制」的官网，用 [VitePress](https://vitepress.dev) 写成，
+线上地址 <https://sunightz.github.io/screenrecorder/>。它是独立的 pnpm 工作区成员，`base` 设为
+`/screenrecorder/`，构建产物由 `scripts/sync-screenrecorder-site.mjs` 复制到 `public/screenrecorder/`，
+再由 Astro 构建一起发布——博客与官网互不影响。
+
+```
+screenrecorder/
+├─ .vitepress/          站点配置与主题（config.mts、theme/custom.css）
+├─ public/              图标与截图（icon.png、shots/）
+├─ guide/               使用指南：安装、权限、参数、声音、区域、悬浮球、相册
+├─ index.md             首页
+├─ versions.md          完整版 / 精简版 对比
+├─ tools.md             视频工具箱
+├─ faq.md  changelog.md
+└─ privacy.md  terms.md 隐私政策与用户协议（与应用内文本同源）
+```
+
+**本地开发**
+
+```bash
+pnpm site:dev          # 只跑官网，http://localhost:5173/screenrecorder/
+pnpm dev               # 只跑博客
+```
+
+**构建（整站，与 CI 一致）**
+
+```bash
+pnpm install           # 一次装好博客 + 官网两套依赖（工作区）
+pnpm build:all         # 构建官网 → 同步到 public/screenrecorder/ → Astro 构建
+```
+
+也可以分开跑：`pnpm site:build` + `pnpm site:sync` + `pnpm build`。
+
+**改内容**：官网正文就是 `screenrecorder/` 下的 Markdown，改完重新 `pnpm build:all` 即可。
+**改品牌色**：`screenrecorder/.vitepress/theme/custom.css` 顶部的 `--vp-c-brand-*`。
+**换截图**：替换 `screenrecorder/public/shots/` 里的图片，注意别把私人内容录进截图。

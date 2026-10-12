@@ -1,0 +1,15 @@
+{
+  "name": "sunight-screenrecorder-site",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "小白录制 官网（VitePress），构建产物由根目录的 Astro 站点复制到 public/screenrecorder/",
+  "scripts": {
+    "dev": "vitepress dev .",
+    "build": "vitepress build .",
+    "preview": "vitepress preview ."
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
