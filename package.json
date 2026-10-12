@@ -10,10 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "site:dev": "pnpm --filter sunight-screenrecorder dev",
-    "site:build": "pnpm --filter sunight-screenrecorder build",
+    "site:dev": "vitepress dev screenrecorder",
+    "site:build": "vitepress build screenrecorder",
     "site:sync": "node scripts/sync-screenrecorder-site.mjs",
-    "build:all": "pnpm site:build && pnpm site:sync && astro build"
+    "build:all": "vitepress build screenrecorder && node scripts/sync-screenrecorder-site.mjs && astro build"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
