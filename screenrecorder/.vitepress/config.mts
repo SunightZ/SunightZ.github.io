@@ -66,7 +66,7 @@ export default defineConfig({
           items: [
             { text: '三种录制方式', link: '/record/modes' },
             { text: '录制参数', link: '/record/parameters' },
-            { text: '设备编码器能力', link: '/record/capabilities' },
+            { text: '参数与设备支持', link: '/record/capabilities' },
             { text: '声音与混音', link: '/record/audio' },
             { text: '区域录制', link: '/record/region' },
             { text: '悬浮球与工具栏', link: '/record/floating' },
@@ -80,7 +80,6 @@ export default defineConfig({
           text: '录制之后',
           items: [
             { text: '视频工具箱', link: '/tools/' },
-            { text: '抖音投稿帧数优化', link: '/tools/douyin' },
             { text: '相册', link: '/album/' },
             { text: '设置与外观', link: '/settings/' },
             { text: '高级版权益', link: '/premium/' },
@@ -93,7 +92,7 @@ export default defineConfig({
           items: [
             { text: '三种录制方式', link: '/record/modes' },
             { text: '录制参数', link: '/record/parameters' },
-            { text: '设备编码器能力', link: '/record/capabilities' },
+            { text: '参数与设备支持', link: '/record/capabilities' },
             { text: '声音与混音', link: '/record/audio' },
             { text: '区域录制', link: '/record/region' },
             { text: '悬浮球与工具栏', link: '/record/floating' },
