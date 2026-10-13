@@ -1,8 +1,10 @@
 // 把「小白录制」官网（VitePress，源码在 screenrecorder/）的构建产物
 // 同步到 Astro 的 public/screenrecorder/。
 //
-// Astro 构建时会把 public/ 原样复制进 dist/，官网因此挂在 https://sunightz.github.io/screenrecorder/ 下，
-// 与博客（根路径）互不影响。只清理 public/screenrecorder/ 这一个小目录，不动 public/ 里的其它文件。
+// 目标目录必须与 screenrecorder/.vitepress/config.mts 里的 base 一致：
+// Astro 构建时会把 public/ 原样复制进 dist/，官网因此挂在
+// https://sunightz.github.io/screenrecorder/ 下，与博客（根路径）互不影响。
+// 只清理 public/screenrecorder/ 这一个小目录，不动 public/ 里的其它文件。
 import { cp, mkdir, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'

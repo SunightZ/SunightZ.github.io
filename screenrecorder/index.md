@@ -5,16 +5,13 @@ hero:
   name: 小白录制
   text: 高帧率屏幕录制与视频处理
   tagline: 系统录屏 / Shizuku / Root 三种采集方式，系统声音与麦克风混音，区域录制、悬浮球、屏幕标注与视频工具箱。没有账号，没有云端，录制内容只留在你自己的设备上。
-  image:
-    src: /shots/home.jpg
-    alt: 小白录制 主页
   actions:
     - theme: brand
       text: 快速开始
       link: /guide/
     - theme: alt
-      text: 版本对比
-      link: /versions
+      text: 功能总览
+      link: /guide/#功能地图
     - theme: alt
       text: 隐私政策
       link: /privacy
@@ -27,33 +24,47 @@ features:
   - title: 参数按设备给
     details: 分辨率、帧率（最高跟随屏幕刷新率，如 120 FPS）、码率、H.264/H.265、关键帧间隔 1～10 秒；参数超出设备编码能力时会明确报错，而不是录出一堆坏帧。
   - title: 录制时也能操作
-    details: 可拖动悬浮球随时开始/停止/暂停，区域录制只录选中的一块屏幕，录制中还能直接在画面上圈点标注。
+    details: 可拖动悬浮球随时开始/停止/暂停，区域录制只录选中的一块屏幕，录制中还能直接在画面上圈点标注，也可开启触摸可视化。
   - title: 录完不用换 App
-    details: 内置视频工具箱：格式转换、提取音频、压缩、旋转镜像、音量调整、超分、抖音投稿帧数优化，结果另存，原文件不动。
+    details: 内置视频工具箱：格式转换、提取音频、压缩、超分、旋转镜像、倒放、音量调整、抖音投稿帧数优化，结果另存，原文件不动。
   - title: 隐私写在明处
     details: 无账号体系、无广告、无统计上报、不建用户画像；唯一的联网行为是首次使用视频工具箱时下载 FFmpeg 运行库，并按内置 SHA-256 逐个校验。
 ---
 
 <div class="sr-section">
 
-## 界面
+## 这份文档覆盖什么
 
-<div class="sr-shots">
-  <figure class="sr-shot">
-    <img src="/shots/home.jpg" alt="主页：参数预览与录制方式" />
-    <figcaption>主页 · 参数预览、录制方式与画面设置</figcaption>
-  </figure>
-  <figure class="sr-shot">
-    <img src="/shots/tool.jpg" alt="工具页：视频工具箱" />
-    <figcaption>工具 · 格式转换、倒放、超分、音量调整…</figcaption>
-  </figure>
-  <figure class="sr-shot">
-    <img src="/shots/album.jpg" alt="相册页：录制列表" />
-    <figcaption>相册 · 列表 / 网格、时长与体积一览</figcaption>
-  </figure>
+这不是一份宣传页，而是**逐项对照源码写成的功能文档**：每个开关叫什么、取值范围是多少、默认值是什么、超限时应用会说什么，都按实际实现记录。适合三类人看：
+
+- **想用起来的人** —— 从[安装与首次启动](/guide/install)开始，五分钟能录出第一段视频。
+- **想搞清某个功能到底怎么运作的人** —— [录制](/record/modes)、[视频工具箱](/tools/)、[相册](/album/)三块各自成章。
+- **想核对行为边界的人** —— [设备编码器能力](/record/capabilities)、[权限说明](/guide/permissions)、[数据与隐私](/settings/privacy)把限制和数据处理方式写到了具体字符串。
+
 </div>
 
-<p class="sr-lede">三张都是真机截图，未做任何裁切与缩放。主页把当下会用到的参数一次性摊开，工具页是录制之后的处理入口，相册负责浏览与整理（截图来自完整版，Shizuku / Root 是完整版功能）。</p>
+<div class="sr-section">
+
+## 功能地图
+
+<div class="sr-grid">
+  <div class="sr-card">
+    <h3>录制</h3>
+    <p>三种采集方式、分辨率 / 帧率 / 码率 / 编码格式、系统声音与麦克风两路混音、区域录制、悬浮球与悬浮工具栏、屏幕标注、触摸可视化、前置摄像头小窗、启动音效。</p>
+  </div>
+  <div class="sr-card">
+    <h3>视频工具箱</h3>
+    <p>八个 FFmpeg 任务：格式转换、提取音频、压缩、超分、旋转与镜像、倒放、音量调整、抖音投稿帧数优化。同一时间只跑一个，结果另存。</p>
+  </div>
+  <div class="sr-card">
+    <h3>相册</h3>
+    <p>列表 / 网格两种排布，五种排序基准，显示字段可裁剪，播放、分享、重命名、删除与轨道级视频信息。</p>
+  </div>
+  <div class="sr-card">
+    <h3>设置与外观</h3>
+    <p>六种色彩模式、八种主题色、九种调色板风格，悬浮窗大小 / 不透明度 / 圆角 / 颜色，控制中心磁贴与外部启动入口。</p>
+  </div>
+</div>
 
 </div>
 
@@ -70,7 +81,7 @@ features:
 | 系统录屏（MediaProjection） | 支持 | 支持 |
 | Shizuku 采集（免录屏弹窗 / 镜像主屏） | 支持 | — |
 | Root 采集（系统级进程） | 支持 | — |
-| 显示触摸位置 | 支持 | — |
+| 显示触摸位置 / 触摸可视化 | 支持 | — |
 | 声音、区域录制、悬浮球、屏幕标注、视频工具箱、相册 | 支持 | 支持 |
 | 面向 | 游戏录制、需要高帧率与低占用 | 日常录屏、只要系统授权 |
 

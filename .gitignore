@@ -13,6 +13,8 @@ node_modules/
 screenrecorder/.vitepress/cache/
 screenrecorder/.vitepress/dist/
 screenrecorder/node_modules/
+# 在仓库根误跑 vitepress 时会生成这一份缓存，不要入库
+.vitepress/
 # 官网产物由 pnpm build:all / CI 生成，不入库
 public/screenrecorder/
 

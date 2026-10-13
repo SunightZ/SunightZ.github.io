@@ -41,6 +41,7 @@ jobs:
 
       # 「小白录制」官网先构建，再同步进 public/screenrecorder/，
       # 最后由 Astro 构建把它一起复制到 dist/screenrecorder/。
+      # 目标目录须与 screenrecorder/.vitepress/config.mts 的 base 保持一致。
       - name: Build 小白录制 官网（VitePress）
         run: pnpm site:build
         env:

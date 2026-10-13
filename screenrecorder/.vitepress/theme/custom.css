@@ -1,8 +1,8 @@
 /**
  * 小白录制 官网样式。
  *
- * 只做三件事：把品牌蓝对齐应用（图标底色 #277AF7）、给首页的卡片/截图/版本标签一套统一外观、
- * 修正长表格与长截图的窄屏表现。其余交给 VitePress 默认主题，浅色/深色都跟随。
+ * 只做三件事：把品牌蓝对齐应用（图标底色 #277AF7）、给首页与文档里的卡片/标签/提示块
+ * 一套统一外观、让长表格在窄屏可横向滚动。其余交给 VitePress 默认主题，浅色/深色都跟随。
  */
 
 :root {
@@ -96,37 +96,6 @@
   color: var(--vp-c-text-2);
 }
 
-/* 截图 */
-.sr-shots {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  padding: 1.5rem 0 0.5rem;
-  scrollbar-width: thin;
-}
-
-.sr-shot {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.sr-shot img {
-  height: 520px;
-  width: auto;
-  border-radius: 20px;
-  border: 1px solid var(--sr-card-border);
-  box-shadow: var(--sr-shadow);
-  background: var(--vp-c-bg);
-}
-
-.sr-shot figcaption {
-  font-size: 0.8rem;
-  color: var(--vp-c-text-3);
-}
-
 /* 版本标签 */
 .sr-tag {
   display: inline-block;
@@ -199,12 +168,8 @@
   min-width: 620px;
 }
 
-/* 截图行在窄屏上不要顶到边 */
+/* 窄屏：首页区块收紧，长表格靠 .sr-scroll 横向滚动 */
 @media (max-width: 640px) {
-  .sr-shot img {
-    height: 340px;
-  }
-
   .sr-section {
     margin-top: 3rem;
   }

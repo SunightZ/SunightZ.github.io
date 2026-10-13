@@ -4,7 +4,9 @@ import { defineConfig } from 'vitepress'
  * 小白录制 官网。
  *
  * 站点挂在博客（仓库根，Astro）的子路径下，所以 base 必须是 /screenrecorder/，
- * 构建产物由根目录的 .github/workflows/deploy.yml 复制到 public/screenrecorder/。
+ * 构建产物由根目录的 .github/workflows/deploy.yml 同步到 public/screenrecorder/。
+ * 注意：head 里的图标/og:image 用的是绝对路径，改 base 时要一并改；
+ * themeConfig.logo 交给 VitePress 自动加 base，不用手写。
  */
 export default defineConfig({
   lang: 'zh-CN',
@@ -31,12 +33,16 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '使用指南', link: '/guide/' },
-      { text: '版本对比', link: '/versions' },
-      { text: '视频工具箱', link: '/tools' },
-      { text: '常见问题', link: '/faq' },
+      { text: '录制', link: '/record/modes' },
+      { text: '视频工具', link: '/tools/' },
+      { text: '相册', link: '/album/' },
+      { text: '设置', link: '/settings/' },
+      { text: '高级版', link: '/premium/' },
       {
-        text: '条款',
+        text: '更多',
         items: [
+          { text: '版本对比', link: '/versions' },
+          { text: '常见问题', link: '/faq' },
           { text: '隐私政策', link: '/privacy' },
           { text: '用户协议', link: '/terms' },
           { text: '更新日志', link: '/changelog' },
@@ -49,25 +55,104 @@ export default defineConfig({
         {
           text: '开始使用',
           items: [
-            { text: '总览', link: '/guide/' },
+            { text: '功能总览', link: '/guide/' },
             { text: '安装与首次启动', link: '/guide/install' },
+            { text: '界面导览', link: '/guide/interface' },
             { text: '权限说明', link: '/guide/permissions' },
           ],
         },
         {
           text: '录制',
           items: [
-            { text: '录制参数', link: '/guide/parameters' },
-            { text: '声音与增益', link: '/guide/audio' },
-            { text: '区域录制', link: '/guide/region' },
-            { text: '悬浮球与屏幕标注', link: '/guide/floating' },
+            { text: '三种录制方式', link: '/record/modes' },
+            { text: '录制参数', link: '/record/parameters' },
+            { text: '设备编码器能力', link: '/record/capabilities' },
+            { text: '声音与混音', link: '/record/audio' },
+            { text: '区域录制', link: '/record/region' },
+            { text: '悬浮球与工具栏', link: '/record/floating' },
+            { text: '屏幕标注', link: '/record/annotation' },
+            { text: '触摸可视化', link: '/record/touch' },
+            { text: '摄像头小窗与启动音效', link: '/record/extras' },
+            { text: '保存、暂停与恢复', link: '/record/output' },
           ],
         },
         {
           text: '录制之后',
           items: [
-            { text: '保存位置与相册', link: '/guide/album' },
-            { text: '视频工具箱', link: '/tools' },
+            { text: '视频工具箱', link: '/tools/' },
+            { text: '抖音投稿帧数优化', link: '/tools/douyin' },
+            { text: '相册', link: '/album/' },
+            { text: '设置与外观', link: '/settings/' },
+            { text: '高级版权益', link: '/premium/' },
+          ],
+        },
+      ],
+      '/record/': [
+        {
+          text: '录制',
+          items: [
+            { text: '三种录制方式', link: '/record/modes' },
+            { text: '录制参数', link: '/record/parameters' },
+            { text: '设备编码器能力', link: '/record/capabilities' },
+            { text: '声音与混音', link: '/record/audio' },
+            { text: '区域录制', link: '/record/region' },
+            { text: '悬浮球与工具栏', link: '/record/floating' },
+            { text: '屏幕标注', link: '/record/annotation' },
+            { text: '触摸可视化', link: '/record/touch' },
+            { text: '摄像头小窗与启动音效', link: '/record/extras' },
+            { text: '保存、暂停与恢复', link: '/record/output' },
+          ],
+        },
+      ],
+      '/tools/': [
+        {
+          text: '视频工具箱',
+          items: [
+            { text: '总览', link: '/tools/' },
+            { text: '运行库', link: '/tools/runtime' },
+            { text: '格式转换', link: '/tools/convert' },
+            { text: '提取音频', link: '/tools/extract' },
+            { text: '视频压缩', link: '/tools/compress' },
+            { text: '视频超分', link: '/tools/upscale' },
+            { text: '旋转与镜像', link: '/tools/rotate' },
+            { text: '视频倒放', link: '/tools/reverse' },
+            { text: '音量调整', link: '/tools/volume' },
+            { text: '抖音投稿帧数优化', link: '/tools/douyin' },
+          ],
+        },
+      ],
+      '/album/': [
+        {
+          text: '相册',
+          items: [
+            { text: '总览', link: '/album/' },
+            { text: '排序、布局与显示字段', link: '/album/view' },
+            { text: '播放、分享与信息', link: '/album/actions' },
+            { text: '重命名与删除', link: '/album/manage' },
+            { text: '保存位置与媒体库', link: '/album/storage' },
+          ],
+        },
+      ],
+      '/settings/': [
+        {
+          text: '设置与外观',
+          items: [
+            { text: '设置总览', link: '/settings/' },
+            { text: '主题与外观', link: '/settings/theme' },
+            { text: '控制与安全', link: '/settings/control' },
+            { text: '外部启动', link: '/settings/external' },
+            { text: '数据与隐私', link: '/settings/privacy' },
+          ],
+        },
+      ],
+      '/premium/': [
+        {
+          text: '高级版',
+          items: [
+            { text: '权益总览', link: '/premium/' },
+            { text: '解锁与激活', link: '/premium/unlock' },
+            { text: '试用与限制', link: '/premium/trial' },
+            { text: '实测数据', link: '/premium/benchmark' },
           ],
         },
       ],
